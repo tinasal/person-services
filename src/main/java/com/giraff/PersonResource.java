@@ -25,7 +25,7 @@ public class PersonResource {
 	@PUT
 	@Path("{personId}") //http://localhost:8080/person-services/webapi/persons/person
 	@Consumes(MediaType.APPLICATION_XML) 
-	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateWithXML(Person person) {
 		
 		if (person == null) {
@@ -39,7 +39,7 @@ public class PersonResource {
 	@POST
 	@Path("person") //http://localhost:8080/person-services/webapi/persons/person
 	@Consumes(MediaType.APPLICATION_XML) 
-	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response createPersonWithXML(Person person) {
 		if (person == null) {
 			return Response.status(Status.BAD_REQUEST).build();
@@ -50,14 +50,14 @@ public class PersonResource {
 	}
 
 	@GET
-	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	@Produces(MediaType.APPLICATION_JSON)
 	public List<Person> getAll() {
 
 		return personRepository.findAll();
 	}
 	@GET
 	@Path("{personId}") //http://localhost:8080/person-services/webapi/persons/123
-	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("personId") String personId) {
 		if (personId == null || personId.length() < 1) {
 			return Response.status(Status.BAD_REQUEST).build();
@@ -71,7 +71,7 @@ public class PersonResource {
 	}
 	@GET
 	@Path("{personId}/gender") //http://localhost:8080/person-services/webapi/persons/123/gender
-	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response getPersonGender(@PathParam("personId") String personId) {
 		if (personId == null || personId.length() < 1) {
 			return Response.status(Status.BAD_REQUEST).build();
