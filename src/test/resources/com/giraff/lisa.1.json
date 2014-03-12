@@ -1,0 +1,13 @@
+{
+    "Lisa Lundell": {
+        "name": {
+            "given": "Lisa",
+            "family": "Lundell"
+        },
+        "gender": "female",
+        "email": [
+            "l@lundell-lisa.se"
+        ],
+        "homepage": "http://foo.lundell-lisa.se"
+    }
+}
