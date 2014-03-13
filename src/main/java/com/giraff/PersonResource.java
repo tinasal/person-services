@@ -3,6 +3,7 @@ package com.giraff;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -22,6 +23,23 @@ public class PersonResource {
 	
 	private PersonRepository personRepository = new PersonRepositoryStub();
 	
+	@DELETE
+	@Path("{personId}") //http://localhost:8080/person-services/webapi/persons/person
+	@Consumes(MediaType.APPLICATION_XML) 
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response delete(@PathParam ("personId") String personId) {
+		
+		if (personId == null) {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+		try {
+			personRepository.delete(personId);
+		} catch (NumberFormatException e) {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+		
+		return Response.ok().build();
+	}
 	@PUT
 	@Path("{personId}") //http://localhost:8080/person-services/webapi/persons/person
 	@Consumes(MediaType.APPLICATION_XML) 
@@ -62,8 +80,7 @@ public class PersonResource {
 		if (personId == null || personId.length() < 1) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-		Person person = personRepository.find(Long.parseLong(personId));
-		
+		Person person = personRepository.find(personId);
 		if (person == null) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
@@ -76,7 +93,7 @@ public class PersonResource {
 		if (personId == null || personId.length() < 1) {
 			return Response.status(Status.BAD_REQUEST).build();
 		}
-		Person person = personRepository.find(Long.parseLong(personId));
+		Person person = personRepository.find(personId);
 		if (person == null) {
 			return Response.status(Status.NOT_FOUND).build();
 		}

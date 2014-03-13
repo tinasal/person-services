@@ -10,8 +10,8 @@ import com.giraff.model.Person.Gender;
 public class PersonRepositoryStub implements PersonRepository {
 	
    @Override
-  	public Person find(Long personId) {
-	   if (personId == 7777L) {
+  	public Person find(String personId) {
+	   if (personId == null || personId.equals("7777")) {
 		   return null;
 	   }
 	   return createPerson("Tina", "Salen", Gender.Female, "tina-sal@hotmail.com", "", 123L);
@@ -37,6 +37,11 @@ public class PersonRepositoryStub implements PersonRepository {
      	//update the Person
     	return person;
     }
+    @Override
+    	public void delete(String personId) {
+    		// delete person
+    		
+    	}
     private List<Person> createPersonListTest() {
     	List<Person> personList = new ArrayList<Person>();
     	personList.add(createPerson("Tina", "Salen", Gender.Female, "tina-sal@hotmail.com", "", 123L));

@@ -64,5 +64,17 @@ public class PersonClient {
 		}
 		return response.readEntity(Person.class);
 	}
+	public void delete(String personId) {
+		//http://localhost:8080/person-services/webapi/persons/person
+		WebTarget target = client.target("http://localhost:8080/person-services/webapi/");
+		
+		Response response = target.path("persons/" + personId)
+				.request(MediaType.APPLICATION_JSON).delete();
+		
+		if (response.getStatus() != 200) {
+			throw new RuntimeException(response.getStatus() + ": there was an error on the server");
+		}
+		
+	}
 
 }

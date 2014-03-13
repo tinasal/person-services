@@ -1,6 +1,7 @@
 package com.giraff.client;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
@@ -11,6 +12,11 @@ import com.giraff.model.Person.Gender;
 
 public class PersonClientTest {
 
+	@Test
+	public void testDelete() {
+		PersonClient client = new PersonClient();
+		client.delete("123");
+	}
 	
 	@Test
 	public void testPutNewEntity() {
@@ -21,7 +27,6 @@ public class PersonClientTest {
 		PersonClient client = new PersonClient();
 		person = client.updateWithXML(person);
 		assertNotNull(person);
-		System.out.println("testPutNewEntity OK ");
 	}
 	@Test
 	public void testPutExists() {
@@ -36,12 +41,7 @@ public class PersonClientTest {
 		person.setFamilyName("Anton");
 		person = client.updateWithXML(person);
 		assertNotNull(person);
-		
-		System.out.println("tet getPerson with id: " + person.getId());
-		System.out.println("id: " + person.getId());
-		System.out.println("familyName: " + person.getFamilyName());
-		System.out.println("givenName: " + person.getGivenName());
-
+		assertEquals("Anton", person.getFamilyName());
 	}
 		
 	@Test
@@ -53,8 +53,6 @@ public class PersonClientTest {
 		
 		assertNotNull(person);
 		assertNotNull(person.getId());
-		System.out.println("testCreate OK ");
-		
 	}
 	
 	@Test
@@ -64,11 +62,7 @@ public class PersonClientTest {
 
 		Person person = client.get("123");
 		assertNotNull(person);
-		
-		System.out.println("tet getPerson with id: " + person.getId());
-		System.out.println("id: " + person.getId());
-		System.out.println("familyName: " + person.getFamilyName());
-		System.out.println("givenName: " + person.getGivenName());
+		assertEquals("123", person.getId().toString());
 		
 	}
 	@Test
@@ -77,17 +71,12 @@ public class PersonClientTest {
 		PersonClient client = new PersonClient();
 		List<Person> persons = client.get();
 		assertNotNull(persons);
-		System.out.println("test getList with 2 persons: " );
-		for (Person person : persons) {
-			System.out.println("id: " + person.getId());
-			System.out.println("familyName: " + person.getFamilyName());
-			System.out.println("givenName: " + person.getGivenName());
-		}
+		assertEquals(2, persons.size());
 	}
 	@Test(expected=RuntimeException.class)
 	public void testGetWithBadRequest() {
 		PersonClient client = new PersonClient();
-		client.get(null);
+		client.get("");
 	}
 	@Test(expected=RuntimeException.class)
 	public void testGetWithNotFound() {

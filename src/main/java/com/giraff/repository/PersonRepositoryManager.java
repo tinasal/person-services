@@ -1,8 +1,6 @@
 package com.giraff.repository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -13,26 +11,32 @@ import javax.persistence.TypedQuery;
 import com.giraff.model.Person;
 
 
-public class PersonRepositoryManager implements PersonRepository {
+public class PersonRepositoryManager { //implements PersonRepository {
 	
 	private static final String PERSISTENCE_UNIT_NAME = "Person";
 	private static EntityManagerFactory factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
 	@PersistenceContext 
 	private EntityManager em = factory.createEntityManager();
 
-   @Override
-  	public Person find(Long personId) {
-       Person person = em.find(Person.class,personId);
+//   @Override
+  	public Person find(String personId) {
+       Long id;
+	   try {
+		   id = Long.parseLong(personId);
+	} catch (Exception e) {
+		return null;
+	}
+	   Person person = em.find(Person.class, id);
        return person;
     }
-    @Override
+//    @Override
     public List<Person> findAll() {
         TypedQuery<Person> query = em.createQuery(
                 "SELECT p FROM Person p ORDER BY p.familyName", Person.class);
             return query.getResultList();
     }
 
-    @Override
+//    @Override
     public Person persist(Person person) {
     	long id;
         try{
@@ -41,7 +45,6 @@ public class PersonRepositoryManager implements PersonRepository {
         		  id = query.getSingleResult();
         		  
         }catch(Exception e){
-        	System.out.println("Couldn't get max ID");
         	id = 0;
         }
         try{
@@ -60,7 +63,7 @@ public class PersonRepositoryManager implements PersonRepository {
         return person;
     }
 
-    @Override
+//    @Override
     public Person merge(Person person) {
         try{
         	em.merge(person);
@@ -74,6 +77,29 @@ public class PersonRepositoryManager implements PersonRepository {
 			}
         }
     	return person;
+    }
+//    @Override
+    public void delete(String personId) {
+    	Long id;
+    	try {
+    		id = Long.parseLong(personId);
+    	} catch (NumberFormatException e) {
+    		throw e;
+    	}
+
+    	try{
+    		Person person = em.find(Person.class, id);
+    		em.remove(person);
+    		em.flush();
+    	}catch(Exception e){
+    	}
+    	finally{
+    		try {
+    			em.close();
+    		} catch (Exception e) {
+    		}
+    	}
+    	return;
     }
 
 }
