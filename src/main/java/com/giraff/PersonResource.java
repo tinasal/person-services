@@ -16,12 +16,13 @@ import javax.ws.rs.core.Response.Status;
 
 import com.giraff.model.Person;
 import com.giraff.repository.PersonRepository;
+import com.giraff.repository.PersonRepositoryManager;
 import com.giraff.repository.PersonRepositoryStub;
 
 @Path("persons") //http://localhost:8080/person-services/webapi/persons
 public class PersonResource {
 	
-	private PersonRepository personRepository = new PersonRepositoryStub();
+	private PersonRepository personRepository = new PersonRepositoryManager();//PersonRepositoryStub();
 	
 	@DELETE
 	@Path("{personId}") //http://localhost:8080/person-services/webapi/persons/person

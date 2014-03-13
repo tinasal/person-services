@@ -2,6 +2,7 @@ package com.giraff.client;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.List;
 
@@ -15,16 +16,32 @@ public class PersonClientTest {
 	@Test
 	public void testDelete() {
 		PersonClient client = new PersonClient();
-		client.delete("123");
+
+		Person person = createPerson("Alfred", "Salen", Gender.Male, "as@home.se", "");
+		person = client.createWithXML(person);
+		assertNotNull(person);
+
+		client.delete(person.getId().toString());
+		try {
+			person = client.get(person.getId().toString());
+		} catch (Exception e) {
+			if (e.getMessage().startsWith("404")) {
+				// its ok, we got a 404 not found
+				person = null;
+			}
+		}
+		assertNull(person);
 	}
 	
 	@Test
 	public void testPutNewEntity() {
 		//checks that its idempotent, if it not exists it will create a new person
+		PersonClient client = new PersonClient();
+		//First try to delete person to make sure it not exists
+		client.delete("122");
+		//create a new person with update (put)
 		Person person = createPerson("Alfred", "Salen", Gender.Male, "as@home.se", "");
 		person.setId(122L);
-		
-		PersonClient client = new PersonClient();
 		person = client.updateWithXML(person);
 		assertNotNull(person);
 	}
@@ -38,10 +55,10 @@ public class PersonClientTest {
 		person = client.createWithXML(person);
 		assertNotNull(person);
 	
-		person.setFamilyName("Anton");
+		person.setGivenName("Anton");
 		person = client.updateWithXML(person);
 		assertNotNull(person);
-		assertEquals("Anton", person.getFamilyName());
+		assertEquals("Anton", person.getGivenName());
 	}
 		
 	@Test
@@ -60,18 +77,24 @@ public class PersonClientTest {
 		
 		PersonClient client = new PersonClient();
 
-		Person person = client.get("123");
+		Person person = createPerson("Tina", "Salen", Gender.Female, "ts@home.se", "");
+		person = client.createWithXML(person);
 		assertNotNull(person);
-		assertEquals("123", person.getId().toString());
+		assertNotNull(person.getId());
+		person = client.get(person.getId().toString());
+		assertNotNull(person);
 		
 	}
 	@Test
 	public void testGetList() {
 
 		PersonClient client = new PersonClient();
+		
+		Person person = createPerson("Tina", "Salen", Gender.Female, "ts@home.se", "");
+		person = client.createWithXML(person);
+
 		List<Person> persons = client.get();
 		assertNotNull(persons);
-		assertEquals(2, persons.size());
 	}
 	@Test(expected=RuntimeException.class)
 	public void testGetWithBadRequest() {
