@@ -6,7 +6,8 @@ import static org.junit.Assert.assertNull;
 
 import java.util.List;
 
-//import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 import com.giraff.model.Person;
@@ -14,7 +15,7 @@ import com.giraff.model.Person.Gender;
 
 public class PersonClientTest {
 
-	//private  static final Logger logger = Logger.getLogger(PersonClient.class);
+	private  static final Logger logger = LogManager.getLogger(PersonClient.class);
 	
 	@Test
 	public void testDelete() {
@@ -29,7 +30,7 @@ public class PersonClientTest {
 			person = client.get(person.getId().toString());
 		} catch (Exception e) {
 			if (e.getMessage().startsWith("404")) {
-//				logger.info("Person not found in get, ok since we just deleted it.");
+				logger.info("Person not found in get, ok since we just deleted it.");
 				// its ok, we got a 404 not found
 				person = null;
 			}
@@ -63,7 +64,7 @@ public class PersonClientTest {
 		person = client.updateWithXML(person);
 		assertNotNull(person);
 		assertEquals("Anton", person.getGivenName());
-//		logger.info("Nytt namn" + person.getGivenName());
+		logger.info("Nytt namn " + person.getGivenName());
 	}
 		
 	@Test

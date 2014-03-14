@@ -2,14 +2,15 @@ package com.giraff.repository;
 
 import java.util.List;
 
-//import org.apache.log4j.Logger;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.giraff.model.Person;
 
@@ -20,7 +21,7 @@ public class PersonRepositoryManager implements PersonRepository {
 	private static EntityManagerFactory factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
 	@PersistenceContext 
 	private EntityManager em = factory.createEntityManager();
-//	private  static final Logger logger = Logger.getLogger(PersonRepositoryManager.class);
+	private  static final Logger logger = LogManager.getLogger(PersonRepositoryManager.class);
 	
 	@Override
   	public Person find(String personId) {
@@ -50,7 +51,7 @@ public class PersonRepositoryManager implements PersonRepository {
     		id++; //add one to id
 
     	}catch(Exception e){
-//    		logger.debug("No rows found in table Person");
+    		logger.debug("No rows found in table Person");
     		//No rows in db, id = 0
     		id = 0;
     	}
@@ -60,14 +61,14 @@ public class PersonRepositoryManager implements PersonRepository {
     		em.persist(person);
     		em.getTransaction().commit();
     	}catch(Exception e){
-//    		logger.debug("Couldn't persist in table Person");
+    		logger.debug("Couldn't persist in table Person");
     		throw new RuntimeException(e);
     	}
     	finally{
     		try {
     			em.close();
     		} catch (Exception e) {
-//        		logger.debug("Couldn't close connectionn");
+        		logger.debug("Couldn't close connectionn");
         		throw new RuntimeException(e);
     		}
     	}
@@ -84,14 +85,14 @@ public class PersonRepositoryManager implements PersonRepository {
         	em.persist(person);
     		em.getTransaction().commit();
         }catch(Exception e){
-//    		logger.debug("Couldn't merge in table Person");
+    		logger.debug("Couldn't merge in table Person");
     		throw new RuntimeException(e);
         }
         finally{
         	try {
 				em.close();
 			} catch (Exception e) {
-//        		logger.debug("Couldn't close connectionn");
+        		logger.debug("Couldn't close connectionn");
         		throw new RuntimeException(e);
 			}
         }
@@ -113,14 +114,14 @@ public class PersonRepositoryManager implements PersonRepository {
     		}
     		em.getTransaction().commit();
     	}catch(Exception e){
-//    		logger.debug("Couldn't delete from table Person");
+    		logger.debug("Couldn't delete from table Person");
     		throw new RuntimeException(e);
     	}
     	finally{
     		try {
     			em.close();
     		} catch (Exception e) {
-  //      		logger.debug("Couldn't close connectionn");
+      		logger.debug("Couldn't close connectionn");
         		throw new RuntimeException(e);
     		}
     	}

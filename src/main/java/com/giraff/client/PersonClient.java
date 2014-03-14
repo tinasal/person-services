@@ -10,7 +10,11 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-//import org.apache.log4j.Logger;
+
+
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.giraff.model.Person;
 import com.giraff.repository.PersonRepositoryManager;
@@ -18,7 +22,7 @@ import com.giraff.repository.PersonRepositoryManager;
 public class PersonClient {
 	
 	private Client client;
-//	private  static final Logger logger = Logger.getLogger(PersonClient.class);
+	private  static final Logger logger = LogManager.getLogger(PersonClient.class);
 	
 	public PersonClient() {
 		client = ClientBuilder.newClient();
@@ -29,7 +33,7 @@ public class PersonClient {
 		
 		Response response = target.path("persons/" + id).request(MediaType.APPLICATION_JSON).get(Response.class);
 		if (response.getStatus() != 200) { //200 = OK
-//    		logger.debug("Error: " + response.getStatus());
+    		logger.debug("Error: " + response.getStatus());
 			throw new RuntimeException(response.getStatus() + "there was an error on the server");
 		}
 		
@@ -52,7 +56,7 @@ public class PersonClient {
 				.post(Entity.entity(person, MediaType.APPLICATION_XML));
 		
 		if (response.getStatus() != 200) { //200 = OK
-//    		logger.debug("Error: " + response.getStatus());
+    		logger.debug("Error: " + response.getStatus());
 			throw new RuntimeException(response.getStatus() + "there was an error on the server");
 		}
 		return response.readEntity(Person.class);
@@ -66,7 +70,7 @@ public class PersonClient {
 				.put(Entity.entity(person, MediaType.APPLICATION_XML));
 		
 		if (response.getStatus() != 200) { //200 = OK
-//    		logger.debug("Error: " + response.getStatus());
+    		logger.debug("Error: " + response.getStatus());
 			throw new RuntimeException(response.getStatus() + "there was an error on the server");
 		}
 		return response.readEntity(Person.class);
@@ -79,7 +83,7 @@ public class PersonClient {
 				.request(MediaType.APPLICATION_JSON).delete();
 		
 		if (response.getStatus() != 200) {
-//    		logger.debug("Error: " + response.getStatus());
+    		logger.debug("Error: " + response.getStatus());
 			throw new RuntimeException(response.getStatus() + ": there was an error on the server");
 		}
 		
