@@ -14,6 +14,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.giraff.model.Person;
 import com.giraff.repository.PersonRepository;
 import com.giraff.repository.PersonRepositoryManager;
@@ -22,6 +25,7 @@ import com.giraff.repository.PersonRepositoryStub;
 @Path("persons") //http://localhost:8080/person-services/webapi/persons
 public class PersonResource {
 	
+	private  static final Logger logger = LogManager.getLogger(PersonResource.class);
 	private PersonRepository personRepository = new PersonRepositoryManager();//PersonRepositoryStub();
 	
 	@DELETE
@@ -31,11 +35,13 @@ public class PersonResource {
 	public Response delete(@PathParam ("personId") String personId) {
 		
 		if (personId == null) {
+			logger.debug("Bad request");
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		try {
 			personRepository.delete(personId);
 		} catch (NumberFormatException e) {
+			logger.debug("Bad request: " + e.getMessage());
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
@@ -48,6 +54,7 @@ public class PersonResource {
 	public Response updateWithXML(Person person) {
 		
 		if (person == null) {
+//			logger.debug("Bad request");
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		person = personRepository.merge(person);
@@ -61,6 +68,7 @@ public class PersonResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createPersonWithXML(Person person) {
 		if (person == null) {
+//			logger.debug("Bad request");
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		personRepository.persist(person);
@@ -79,10 +87,12 @@ public class PersonResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(@PathParam("personId") String personId) {
 		if (personId == null || personId.length() < 1) {
+//			logger.debug("Bad request");
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		Person person = personRepository.find(personId);
 		if (person == null) {
+//			logger.debug("Not found");
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		return Response.ok().entity(person).build();
@@ -96,6 +106,7 @@ public class PersonResource {
 		}
 		Person person = personRepository.find(personId);
 		if (person == null) {
+//			logger.debug("Not found");
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		return Response.ok().entity(person.getGender()).build();
